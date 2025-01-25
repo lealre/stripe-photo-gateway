@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Order Details</h1>
+
+      <!-- Form for address input -->
+      <form id="order-form">
+        <div class="form-group">
+          <label for="street-address">Street Address</label>
+          <input
+            type="text"
+            id="street-address"
+            name="street-address"
+            placeholder="123 Main St"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="city">City</label>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            placeholder="New York"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="state">State</label>
+          <input
+            type="text"
+            id="state"
+            name="state"
+            placeholder="NY"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="zip">Zip Code</label>
+          <input type="text" id="zip" name="zip" placeholder="10001" required />
+        </div>
+
+        <div class="form-group">
+          <label for="country">Country</label>
+          <input
+            type="text"
+            id="country"
+            name="country"
+            placeholder="USA"
+            required
+          />
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" onclick="submitOrderForm()">Submit Order</button>
+      </form>
+    </div>
+
+    <script>
+      function submitOrderForm(event) {
+        event.preventDefault(); // Prevent the form from refreshing the page
+
+        const formData = {
+          streetAddress: document.getElementById("street-address").value,
+          city: document.getElementById("city").value,
+          state: document.getElementById("state").value,
+          zip: document.getElementById("zip").value,
+          country: document.getElementById("country").value,
+        };
+
+        // Send form data to server
+        fetch("/order/details", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+            alert("Order details submitted successfully!");
+            window.location.href = "/order/confirmation"; // Redirect to confirmation page
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Failed to submit order details.");
+          });
+      }
+    </script>
+  </body>
+</html>
