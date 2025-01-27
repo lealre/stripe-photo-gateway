@@ -13,11 +13,11 @@
       <!-- Form for address input -->
       <form id="order-form">
         <div class="form-group">
-          <label for="street-address">Street Address</label>
+          <label for="address">Street Address</label>
           <input
             type="text"
-            id="street-address"
-            name="street-address"
+            id="address"
+            name="address"
             placeholder="123 Main St"
             required
           />
@@ -35,66 +35,34 @@
         </div>
 
         <div class="form-group">
-          <label for="state">State</label>
+          <label for="postal-code">Postal Code</label>
           <input
             type="text"
-            id="state"
-            name="state"
-            placeholder="NY"
+            id="postal-code"
+            name="postal-code"
+            placeholder="10001"
             required
           />
         </div>
 
         <div class="form-group">
-          <label for="zip">Zip Code</label>
-          <input type="text" id="zip" name="zip" placeholder="10001" required />
-        </div>
-
-        <div class="form-group">
-          <label for="country">Country</label>
+          <label for="contact-info">Phone Number</label>
           <input
             type="text"
-            id="country"
-            name="country"
-            placeholder="USA"
+            id="contact-info"
+            name="contact-info"
+            placeholder="Enter your phone number"
             required
+            pattern="[\+]?[0-9]{1,4}?[0-9\s\(\)-]{7,15}"
           />
         </div>
 
-        <!-- Submit button -->
-        <button type="submit" onclick="submitOrderForm()">Submit Order</button>
+        <button type="submit" onclick="submitOrderForm(event)">
+          Submit Order
+        </button>
       </form>
     </div>
 
-    <script>
-      function submitOrderForm(event) {
-        event.preventDefault(); // Prevent the form from refreshing the page
-
-        const formData = {
-          streetAddress: document.getElementById("street-address").value,
-          city: document.getElementById("city").value,
-          state: document.getElementById("state").value,
-          zip: document.getElementById("zip").value,
-          country: document.getElementById("country").value,
-        };
-
-        // Send form data to server
-        fetch("/order/details", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Success:", data);
-            alert("Order details submitted successfully!");
-            window.location.href = "/order/confirmation"; // Redirect to confirmation page
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            alert("Failed to submit order details.");
-          });
-      }
-    </script>
+    <script src="{{ url_for('static', path='js/addressForm.js') }}"></script>
   </body>
 </html>

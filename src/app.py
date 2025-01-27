@@ -1,4 +1,3 @@
-import json
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -6,10 +5,9 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from src.api.dependencies import RedisClient
+from src.api.orders import router
 from src.core.database import engine
 from src.models import Base
-from src.schemas import PhotosUploadPostBodyRequest
 
 
 @asynccontextmanager
@@ -24,6 +22,8 @@ app = FastAPI(lifespan=lifespan)
 
 app.mount('/static', app=StaticFiles(directory='src/pages/static'), name='static')
 
+app.include_router(router, prefix='/orders', tags=['orders'])
+
 templates = Jinja2Templates(directory='src/pages/templates')
 
 
@@ -35,17 +35,3 @@ def home(request: Request):
 @app.get('/order/details', response_class=HTMLResponse)
 def order_details(request: Request):
     return templates.TemplateResponse(request=request, name='order_details.html')
-
-
-@app.post('/upload')
-async def upload_photos(
-    payload: PhotosUploadPostBodyRequest, redis_client: RedisClient
-):
-    """
-    Stores photos in redis
-    """
-    photos_json = json.dumps([photo.model_dump_json() for photo in payload.photos])
-
-    await redis_client.set('photos', photos_json)
-
-    return {'message': 'Stored in redis'}

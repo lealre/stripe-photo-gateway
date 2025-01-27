@@ -56,7 +56,7 @@ function submitForm() {
 
   console.log("Sending form data:", formData);
 
-  fetch("/upload", {
+  fetch("/orders/upload/photos", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData),
