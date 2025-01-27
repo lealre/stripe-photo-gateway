@@ -43,5 +43,7 @@ class Settings(BaseSettings):
     AWS_REGION: str = ''
     AWS_S3_BUCKET_NAME: str = ''
 
+    STRIPE_PRICE_ID: str = ''
+
 
 settings = Settings()

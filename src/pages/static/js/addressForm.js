@@ -5,8 +5,9 @@ function submitOrderForm(event) {
   const city = document.getElementById("city").value;
   const postalCode = document.getElementById("postal-code").value;
   const phoneNumber = document.getElementById("contact-info").value;
+  const email = document.getElementById("email").value;
 
-  if (!address || !city || !postalCode || !phoneNumber) {
+  if (!address || !city || !postalCode || !phoneNumber || !email) {
     alert("All fields are required.");
     return;
   }
@@ -25,11 +26,40 @@ function submitOrderForm(event) {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log("Success:", data);
       if (data.is_validated === true) {
-        window.location.href = "/";
+        const checkoutFormData = {
+          ...formData,
+          customerEmail: email,
+          formattedAddress: data.formatted_address,
+        };
+        console.log(checkoutFormData);
+        return checkoutSession(checkoutFormData)
+        
       } else {
         alert(data.message || "Could not validate address");
       }
     });
 }
+
+function checkoutSession(formData) {
+  fetch("/orders/checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData),
+    credentials: "same-origin",
+  })
+    .then((response) => {
+      console.log(response)
+      if (response.redirected) {
+        // Follow the redirect
+        window.location.href = response.url;
+      } else {
+        return response.json();
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("An error occurred while processing your request.");
+    });
+}
+

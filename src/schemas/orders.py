@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 class PhotoDetails(BaseModel):
@@ -8,5 +8,14 @@ class PhotoDetails(BaseModel):
     quantity: int
 
 
-class PhotosUploadPostBodyRequest(BaseModel):
+class PhotosUploadPayload(BaseModel):
     photos: list[PhotoDetails]
+
+
+class CreateCheckoutSessionPayload(BaseModel):
+    customerEmail: EmailStr
+    phoneNumber: str
+    address: str
+    city: str
+    postalCode: str
+    formattedAddress: str
