@@ -1,4 +1,3 @@
-import asyncio
 from typing import Any, TypeAlias, cast
 
 import stripe
@@ -40,7 +39,9 @@ class StripeClient:
         return new_customer
 
     @classmethod
-    async def create_checkout_session(cls, quantity: int, stripe_customer_id: str):
+    async def create_checkout_session(
+        cls, quantity: int, stripe_customer_id: str
+    ) -> dict[str, Any]:
         checkout_session = await stripe.checkout.Session.create_async(
             line_items=[
                 {
@@ -51,17 +52,15 @@ class StripeClient:
             customer=stripe_customer_id,
             mode='payment',
             success_url=(
-                settings.BACKEND_DOMAIN + '/stripe/callback/{CHECKOUT_SESSION_ID}'
+                settings.BACKEND_DOMAIN + '/orders/success/{CHECKOUT_SESSION_ID}'
             ),
-            cancel_url=(
-                settings.BACKEND_DOMAIN + '/stripe/callback/{CHECKOUT_SESSION_ID}'
-            ),
+            cancel_url=(settings.BACKEND_DOMAIN + '/order/fail'),
         )
 
         return checkout_session
 
+    @classmethod
+    async def get_checkout_session(cls, checkout_session: str) -> dict[str, Any]:
+        session = await stripe.checkout.Session.retrieve_async(checkout_session)
 
-if __name__ == '__main__':
-    stripe_client = StripeClient()
-    customers = asyncio.run(stripe_client.get_customer_by_email('test@email.com'))
-    print(customers)
+        return session
