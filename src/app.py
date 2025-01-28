@@ -35,3 +35,13 @@ def home(request: Request):
 @app.get('/order/details', response_class=HTMLResponse)
 def order_details(request: Request):
     return templates.TemplateResponse(request=request, name='order_details.html')
+
+
+@app.get('/payment/success', response_class=HTMLResponse)
+def payment_success(request: Request):
+    return templates.TemplateResponse(request=request, name='payment_success.html')
+
+
+@app.get('/payment/error', response_class=HTMLResponse)
+def payment_fail(request: Request):
+    return templates.TemplateResponse(request=request, name='payment_error.html')

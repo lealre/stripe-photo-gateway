@@ -140,3 +140,37 @@ button {
 button:hover {
   background-color: #45a049;
 }
+
+.error-message {
+  color: #d32f2f;
+  font-size: 1.2rem;
+  margin: 20px 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+.error-icon {
+  font-size: 3rem;
+  color: #d32f2f;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.error .button-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.error button {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.error button:hover {
+  background-color: #b71c1c;
+}

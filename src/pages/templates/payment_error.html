@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}" />
+    <title>Payment Error</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="error-icon">❌</div>
+      <h1>Payment Error</h1>
+      <p class="error-message">
+        Unfortunately, we could not process your payment at this time.
+      </p>
+      <p>Please try again later or contact our support team for assistance.</p>
+      <div class="button-container error">
+        <button onclick="window.location.href='/'">Go to Homepage</button>
+      </div>
+    </div>
+  </body>
+</html>

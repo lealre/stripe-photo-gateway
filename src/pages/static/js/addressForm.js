@@ -33,8 +33,7 @@ function submitOrderForm(event) {
           formattedAddress: data.formatted_address,
         };
         console.log(checkoutFormData);
-        return checkoutSession(checkoutFormData)
-        
+        return checkoutSession(checkoutFormData);
       } else {
         alert(data.message || "Could not validate address");
       }
@@ -49,17 +48,17 @@ function checkoutSession(formData) {
     credentials: "same-origin",
   })
     .then((response) => {
-      console.log(response)
-      if (response.redirected) {
-        // Follow the redirect
-        window.location.href = response.url;
-      } else {
+      if (response.ok) {
         return response.json();
+      } else {
+        throw new Error("Failed to upload");
       }
+    })
+    .then((data) => {
+      window.location.href = data;
     })
     .catch((error) => {
       console.error("Error:", error);
       alert("An error occurred while processing your request.");
     });
 }
-
