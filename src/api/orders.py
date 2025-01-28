@@ -28,7 +28,7 @@ async def upload_photos(
     payload: PhotosUploadPayload,
     redis_client: RedisClient,
     session_id: str | None = Cookie(None),
-):
+) -> JSONResponse:
     """
     Stores the photos in Redis and generates a session ID to be stored as a cookie
     on the client-side.
@@ -124,8 +124,12 @@ async def create_checkout_session(
             stripe_payment_link=checkout_session['payment_link'],
         )
         session.add(new_order)
+    
+    checkout_url = checkout_session.get('url')
+    if not isinstance(checkout_url, str):
+        raise
 
-    return checkout_session['url']
+    return  checkout_url
 
 
 @router.get('/success/{checkout_session}', response_model=RedirectResponse)

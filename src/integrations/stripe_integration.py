@@ -8,7 +8,7 @@ TypeCasted: TypeAlias = list[dict[str, Any]]
 
 
 class StripeClient:
-    def __init__(self):
+    def __init__(self) -> None:
         stripe.api_key = settings.STRIPE_API_KEY
 
     @classmethod
@@ -26,7 +26,7 @@ class StripeClient:
         customer_info = customer.get('data')
 
         if not customer_info:
-            return
+            return None
 
         return customer_info[0]
 

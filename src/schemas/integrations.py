@@ -4,11 +4,11 @@ from pydantic import BaseModel
 
 
 class GoogleAddressResultSchema(BaseModel):
-    address_components: list
+    address_components: list[Any]
     formatted_address: str
     geometry: dict[str, Any]
     place_id: str
-    types: list
+    types: list[Any]
 
 
 class GoogleAddressValidationAPIResponse(BaseModel):

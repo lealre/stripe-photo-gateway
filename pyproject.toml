@@ -42,6 +42,13 @@ select = ["I", "F", "E", "W", "PL", "PT"]
 preview = true
 quote-style = "single"
 
+[tool.mypy]
+strict = true
+show_error_codes = true
+pretty = true
+ignore_missing_imports = true
+exclude = [ ".venv"]
+
 [tool.taskipy.tasks]
 run = "fastapi dev src/app.py"
 superuser = "python src/utils/create_supersuer.py"
