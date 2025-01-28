@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Order Notification</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+      }
+      .container {
+        width: 80%;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+      }
+      .header {
+        text-align: center;
+        color: #333;
+      }
+      .photo-item {
+        border-bottom: 1px solid #ddd;
+        padding: 10px 0;
+      }
+      .photo-item:last-child {
+        border-bottom: none;
+      }
+      .photo-preview {
+        max-width: 100px;
+        max-height: 100px;
+        object-fit: cover;
+        margin-right: 15px;
+      }
+      .photo-info {
+        display: inline-block;
+        vertical-align: top;
+      }
+      .section-title {
+        font-size: 18px;
+        color: #555;
+        margin-top: 20px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+      }
+      .footer {
+        text-align: center;
+        color: #777;
+        font-size: 12px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Novo pedido recebido!</h1>
+        <p>Detalhes da encomenda:</p>
+      </div>
+
+      <div class="order-photos">
+        {% for photo in photos %}
+        <div class="photo-item">
+          <div class="photo-info">
+            <h3>ID: {{ photo.fileId }}</h3>
+            <p><strong>Nome do arquivo:</strong> {{ photo.fileName }}</p>
+            <p><strong>Quantidade:</strong> {{ photo.quantity }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="address-info">
+        <h2 class="section-title">Pasta S3: {{ folderName }}</h2>
+        <h2 class="section-title">Detalhes do Endereço</h2>
+        <p><strong>Endereço:</strong> {{ addressInfo.address }}</p>
+        <p><strong>Cidade:</strong> {{ addressInfo.city }}</p>
+        <p><strong>Telefone:</strong> {{ addressInfo.phoneNumber }}</p>
+        <p><strong>Código Postal:</strong> {{ addressInfo.postalCode }}</p>
+        {% if addressInfo.formattedAddress %}
+        <p>
+          <strong>Endereço Formatado:</strong> {{ addressInfo.formattedAddress
+          }}
+        </p>
+        {% endif %}
+      </div>
+
+      <div class="footer">
+        <p>&copy; 2025 Your Company Name. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

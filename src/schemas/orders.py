@@ -19,3 +19,14 @@ class CreateCheckoutSessionPayload(BaseModel):
     city: str
     postalCode: str
     formattedAddress: str
+
+
+class OrderInfo(BaseModel):
+    clientId: int
+    photoDetails: list[PhotoDetails]
+    stripePriceId: str
+
+
+class OrderRequestPayload(BaseModel):
+    address: CreateCheckoutSessionPayload
+    orderInfo: OrderInfo

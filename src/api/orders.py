@@ -124,12 +124,13 @@ async def create_checkout_session(
             stripe_payment_link=checkout_session['payment_link'],
         )
         session.add(new_order)
-    
+
     checkout_url = checkout_session.get('url')
+
     if not isinstance(checkout_url, str):
         raise
 
-    return  checkout_url
+    return checkout_url
 
 
 @router.get('/success/{checkout_session}', response_model=RedirectResponse)
