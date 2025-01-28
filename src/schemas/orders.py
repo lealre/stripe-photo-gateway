@@ -12,21 +12,19 @@ class PhotosUploadPayload(BaseModel):
     photos: list[PhotoDetails]
 
 
-class CreateCheckoutSessionPayload(BaseModel):
+class CustomerInfo(BaseModel):
     customerEmail: EmailStr
     phoneNumber: str
-    address: str
-    city: str
-    postalCode: str
     formattedAddress: str
 
 
-class OrderInfo(BaseModel):
-    clientId: int
-    photoDetails: list[PhotoDetails]
-    stripePriceId: str
+class CreateCheckoutSessionPayload(CustomerInfo):
+    address: str
+    city: str
+    postalCode: str
 
 
 class OrderRequestPayload(BaseModel):
-    address: CreateCheckoutSessionPayload
-    orderInfo: OrderInfo
+    orderId: int
+    customerInfo: CustomerInfo
+    orderInfo: PhotosUploadPayload

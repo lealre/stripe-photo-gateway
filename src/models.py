@@ -33,6 +33,9 @@ class Orders(Base):
     __tablename__ = 'orders'
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    customer_email: Mapped[str]
+    customer_phone_number: Mapped[str]
+    delivery_address: Mapped[str]
     unit_amount: Mapped[int]
     quantity: Mapped[int]
     order_status: Mapped[OrderStatus] = mapped_column(SQLAlchemyEnum(OrderStatus))

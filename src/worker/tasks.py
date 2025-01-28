@@ -25,7 +25,7 @@ class DecodedPhoto:
 def task_store_photos_in_s3(
     payload: OrderRequestPayload, folder_name: str
 ) -> dict[str, str]:
-    photos = payload.orderInfo.photoDetails
+    photos = payload.orderInfo.photos
 
     for n, photo in enumerate(photos):
         photo_decoded = decode_photo(photo, n)
@@ -49,12 +49,12 @@ def task_store_photos_in_s3(
 def task_send_new_order_email_notification(
     payload: OrderRequestPayload, folder_name: str
 ) -> dict[str, str]:
-    photos = payload.orderInfo.photoDetails
+    photos = payload.orderInfo.photos
 
     email_attachments = []
     email_template_body = {
         'photos': [],
-        'addressInfo': payload.address.model_dump(),
+        'addressInfo': payload.customerInfo.model_dump(),
         'folderName': folder_name,
     }
 
@@ -92,7 +92,7 @@ def task_notify_and_store_photos(payload: OrderRequestPayload) -> None:
     """
     Orchestrates the photo processing workflow.
     """
-    order_id = payload.orderInfo.clientId
+    order_id = payload.orderId
     folder_name = f'orders/{datetime.now().strftime("%Y/%m/%d")}/order-{order_id}'
     payload_dict = payload.model_dump()
 
@@ -105,10 +105,11 @@ def task_notify_and_store_photos(payload: OrderRequestPayload) -> None:
 
 
 def decode_photo(photo: PhotoDetails, n: int) -> DecodedPhoto:
-    base64_str = photo.fileType.split(',')[1]
+    base64_str = photo.base64.split(',')[1]
 
     file_type_extension = photo.fileType.split('/')[1]
-    file_name = f'Photo-{n:02}.{file_type_extension}'
+    photo_number = n + 1
+    file_name = f'Photo-{photo_number:02}.{file_type_extension}'
 
     file_data = base64.b64decode(base64_str)
     file_like = io.BytesIO(file_data)
