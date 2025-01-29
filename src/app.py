@@ -29,20 +29,25 @@ templates = Jinja2Templates(directory='src/pages/templates')
 
 
 @app.get('/', response_class=HTMLResponse)
-def home(request: Request) -> HTMLResponse:
+def upload_photos_page(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request=request, name='upload_photos.html')
 
 
 @app.get('/order/details', response_class=HTMLResponse)
-def order_details(request: Request) -> HTMLResponse:
+def order_details_page(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request=request, name='order_details.html')
 
 
 @app.get('/payment/success', response_class=HTMLResponse)
-def payment_success(request: Request) -> HTMLResponse:
+def payment_success_page(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request=request, name='payment_success.html')
 
 
 @app.get('/payment/error', response_class=HTMLResponse)
-def payment_fail(request: Request) -> HTMLResponse:
+def payment_error_page(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request=request, name='payment_error.html')
+
+
+@app.get('/error', response_class=HTMLResponse)
+def error_page(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(request=request, name='error.html')

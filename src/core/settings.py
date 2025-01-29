@@ -13,7 +13,7 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str = 'sqlite+aiosqlite:///./dev.db'
 
-    HOST_EMAIL: str = 'renaanvp@gmail.com'
+    HOST_EMAIL: str = ''
 
     EMAIL_USERNAME: str = ''
     EMAIL_PASSWORD: SecretStr = SecretStr('')

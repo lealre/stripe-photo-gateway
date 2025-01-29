@@ -59,6 +59,6 @@ function checkoutSession(formData) {
     })
     .catch((error) => {
       console.error("Error:", error);
-      alert("An error occurred while processing your request.");
+      alert("An error occurred while processing your order.");
     });
 }
