@@ -27,8 +27,8 @@ async def send_email(  # noqa: PLR0917, PLR0913
     recipients: list[str],
     template_name: str | None = None,
     body: str | None = None,
-    attachments: list[UploadFile | str | dict] = [],
-    template_body: list[dict[str, Any]] | dict | None = None,
+    attachments: list[UploadFile | str | dict[Any, Any]] = [],
+    template_body: list[dict[str, Any]] | dict[str, Any] | None = None,
 ) -> None:
     message = MessageSchema(
         recipients=recipients,

@@ -3,10 +3,11 @@ import base64
 import io
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any
 
 from celery import group
 from celery.exceptions import TaskError
-from fastapi import UploadFile
+from starlette.datastructures import UploadFile
 
 from src.core.settings import settings
 from src.integrations import aws_integration
@@ -51,8 +52,8 @@ def task_send_new_order_email_notification(
 ) -> dict[str, str]:
     photos = payload.orderInfo.photos
 
-    email_attachments = []
-    email_template_body = {
+    email_attachments: list[UploadFile | str | dict[Any, Any]] = []
+    email_template_body: dict[str, Any] = {
         'photos': [],
         'addressInfo': payload.customerInfo.model_dump(),
         'folderName': folder_name,

@@ -23,11 +23,25 @@
 
         <div class="preview-container" id="preview-container"></div>
 
+        <div class="total-price">
+          <h3>Unit Price: ${{ unit_price }}</h3>
+        </div>
+
+        <div class="total-price">
+          <h3>Total Photos: <span id="total-photos">0</span></h3>
+        </div>
+
+        <div class="total-price">
+          <h3>Total Price to Pay: $<span id="total-price">0.00</span></h3>
+        </div>
+
         <div class="sticky-footer">
           <button type="button" onclick="submitForm()">Submit</button>
         </div>
       </form>
     </div>
+
+    <meta id="my-data" data-unit-price="{{ unit_price }}" />
 
     <script src="{{ url_for('static', path='js/uploadPhotos.js') }}"></script>
   </body>

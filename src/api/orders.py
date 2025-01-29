@@ -9,7 +9,7 @@ from sqlalchemy import select
 from src.api.dependencies import RedisClient, SessionDep
 from src.core.settings import settings
 from src.integrations import google_integration
-from src.integrations.stripe_integration import StripeClient
+from src.integrations.stripe_integration import stripe_client
 from src.models import CheckoutSessionStatus, Orders, OrderStatus, PaymentStatus
 from src.schemas.integrations import AddressValidationSchema, ValidateAddressInfoRequest
 from src.schemas.orders import (
@@ -20,8 +20,6 @@ from src.schemas.orders import (
     PhotosUploadPayload,
 )
 from src.worker.tasks import task_notify_and_store_photos
-
-stripe_client = StripeClient()
 
 router = APIRouter()
 
@@ -95,7 +93,7 @@ async def create_checkout_session(
     """
     if not session_id:
         raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST, detail='Session ID not found in cookies'
+            status_code=HTTPStatus.NOT_FOUND, detail='Session ID not found in cookies'
         )
 
     photos_info = await redis_client.get(session_id)
@@ -121,6 +119,7 @@ async def create_checkout_session(
             delivery_address=payload.formattedAddress,
             unit_amount=checkout_session['amount_total'],
             quantity=total_photos,
+            redis_cookie_session_id=session_id,
             order_status=OrderStatus.OPEN,
             payment_status=PaymentStatus.UNPAID,
             stripe_checkout_session_status=CheckoutSessionStatus.OPEN,
@@ -146,25 +145,28 @@ async def process_payment_success(
     session: SessionDep,
     checkout_session: str,
     redis_client: RedisClient,
-    session_id: str | None = Cookie(None),
 ) -> RedirectResponse:
     """
     Process the photo storage after the payment is successfully confirmed.
     """
-    if not session_id:
-        return RedirectResponse('/error', status_code=HTTPStatus.SEE_OTHER)
-
-    photos_info = await redis_client.get(session_id)
-    photos_info = PhotosUploadPayload(
-        photos=[PhotoDetails(**photo) for photo in json.loads(photos_info)]
-    )
-
     order = await session.scalar(
         select(Orders).where(Orders.stripe_checkout_session_id == checkout_session)
     )
 
     if not order:
         return RedirectResponse('/error', status_code=HTTPStatus.SEE_OTHER)
+
+    photos_info = await redis_client.get(order.redis_cookie_session_id)
+
+    if not photos_info:
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail='Session ID is no longer available',
+        )
+
+    photos_info = PhotosUploadPayload(
+        photos=[PhotoDetails(**photo) for photo in json.loads(photos_info)]
+    )
 
     stripe_checkout_session = await stripe_client.get_checkout_session(
         checkout_session=checkout_session

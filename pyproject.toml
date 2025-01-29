@@ -58,6 +58,7 @@ superuser = "python src/utils/create_supersuer.py"
 pre_test = "task lint"
 test = "pytest --cov=src -vv"
 post_test = "coverage html"
+check = "mypy --allow-untyped-decorators ."
 lint = "ruff check . && ruff check . --diff"
 format = "ruff check . --fix && ruff format ."
 

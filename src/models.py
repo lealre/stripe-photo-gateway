@@ -38,6 +38,7 @@ class Orders(Base):
     delivery_address: Mapped[str]
     unit_amount: Mapped[int]
     quantity: Mapped[int]
+    redis_cookie_session_id: Mapped[str]
     order_status: Mapped[OrderStatus] = mapped_column(SQLAlchemyEnum(OrderStatus))
     payment_status: Mapped[PaymentStatus] = mapped_column(SQLAlchemyEnum(PaymentStatus))
     stripe_checkout_session_status: Mapped[CheckoutSessionStatus] = mapped_column(

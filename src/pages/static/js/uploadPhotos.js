@@ -28,15 +28,36 @@ function handleFileSelect(event) {
                                 min="1" 
                                 max="100" 
                                 value="1" 
+                                onchange="updatePrice()"
                                 required>
                         </div>
                     `;
 
       previewContainer.appendChild(previewItem);
+      updatePrice();
     };
 
     reader.readAsDataURL(file);
   });
+}
+
+function updatePrice() {
+  const meta = document.getElementById("my-data");
+  const unitPrice = parseFloat(meta.dataset.unitPrice);
+
+  let totalPrice = 0;
+  let totalPhotos = 0;
+
+  selectedFiles.forEach((file, index) => {
+    const quantityInput = document.querySelector(`#quantity-${index}`);
+    const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+
+    totalPrice += quantity * unitPrice;
+    totalPhotos += quantity;
+  });
+
+  document.getElementById("total-price").textContent = totalPrice.toFixed(2);
+  document.getElementById("total-photos").textContent = totalPhotos;
 }
 
 function submitForm() {

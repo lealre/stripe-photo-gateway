@@ -28,7 +28,7 @@ class StripeClient:
         if not customer_info:
             return None
 
-        return customer_info[0]
+        return cast(dict[str, Any], customer_info[0])
 
     @classmethod
     async def create_customer(cls, customer_email: str) -> dict[str, Any]:
@@ -64,3 +64,14 @@ class StripeClient:
         session = await stripe.checkout.Session.retrieve_async(checkout_session)
 
         return session
+
+    @classmethod
+    async def get_price_unit_amount(cls, stripe_price_id: str) -> int:
+        price = await stripe.Price.retrieve_async(stripe_price_id)
+
+        unit_amount = price['unit_amount']
+
+        return cast(int, unit_amount)
+
+
+stripe_client = StripeClient()

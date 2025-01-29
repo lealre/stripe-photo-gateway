@@ -1,3 +1,4 @@
+import asyncio
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
@@ -8,6 +9,8 @@ from fastapi.templating import Jinja2Templates
 
 from src.api.orders import router
 from src.core.database import engine
+from src.core.settings import settings
+from src.integrations.stripe_integration import stripe_client
 from src.models import Base
 
 
@@ -30,7 +33,15 @@ templates = Jinja2Templates(directory='src/pages/templates')
 
 @app.get('/', response_class=HTMLResponse)
 def upload_photos_page(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse(request=request, name='upload_photos.html')
+    unit_price = asyncio.run(
+        stripe_client.get_price_unit_amount(stripe_price_id=settings.STRIPE_PRICE_ID)
+    )
+
+    return templates.TemplateResponse(
+        request=request,
+        name='upload_photos.html',
+        context={'unit_price': unit_price / 100},
+    )
 
 
 @app.get('/order/details', response_class=HTMLResponse)
