@@ -6,10 +6,12 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "aiosqlite>=0.20.0",
+    "asyncpg>=0.30.0",
     "boto3>=1.36.7",
     "celery==5.5.0b2",
     "fastapi-mail>=1.4.2",
     "fastapi[standard]>=0.115.7",
+    "gevent>=24.11.1",
     "pydantic-settings>=2.7.1",
     "redis>=5.2.1",
     "sqlalchemy>=2.0.37",
@@ -18,11 +20,14 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "moto>=5.0.27",
     "mypy>=1.14.1",
+    "pytest-mock>=3.14.0",
     "pytest>=8.3.4",
     "pytest-cov>=6.0.0",
     "ruff>=0.9.3",
     "taskipy>=1.14.1",
+    "testcontainers>=4.9.1",
 ]
 
 [tool.pytest.ini_options]
@@ -35,7 +40,7 @@ omit = ["*/utils/*", "__init__.py"]
 
 [tool.ruff]
 line-length = 88
-extend-exclude = ["migrations", "tests/utils/mocked_data.py"]
+extend-exclude = ["migrations", "tests/utils/mocked_google_responses.py"]
 
 [tool.ruff.lint]
 preview = true
@@ -53,8 +58,7 @@ ignore_missing_imports = true
 exclude = [ ".venv"]
 
 [tool.taskipy.tasks]
-run = "fastapi dev src/app.py"
-superuser = "python src/utils/create_supersuer.py"
+run = "uv run -m fastapi dev src/app.py"
 pre_test = "task lint"
 test = "pytest --cov=src -vv"
 post_test = "coverage html"
