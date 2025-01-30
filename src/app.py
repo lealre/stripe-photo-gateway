@@ -1,4 +1,3 @@
-import asyncio
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
@@ -15,7 +14,7 @@ from src.models import Base
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:  # pragma: no cover
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
         yield
@@ -32,9 +31,9 @@ templates = Jinja2Templates(directory='src/pages/templates')
 
 
 @app.get('/', response_class=HTMLResponse)
-def upload_photos_page(request: Request) -> HTMLResponse:
-    unit_price = asyncio.run(
-        stripe_client.get_price_unit_amount(stripe_price_id=settings.STRIPE_PRICE_ID)
+async def upload_photos_page(request: Request) -> HTMLResponse:
+    unit_price = await stripe_client.get_price_unit_amount(
+        stripe_price_id=settings.STRIPE_PRICE_ID
     )
 
     return templates.TemplateResponse(
@@ -45,20 +44,20 @@ def upload_photos_page(request: Request) -> HTMLResponse:
 
 
 @app.get('/order/details', response_class=HTMLResponse)
-def order_details_page(request: Request) -> HTMLResponse:
+async def order_details_page(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request=request, name='order_details.html')
 
 
 @app.get('/payment/success', response_class=HTMLResponse)
-def payment_success_page(request: Request) -> HTMLResponse:
+async def payment_success_page(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request=request, name='payment_success.html')
 
 
 @app.get('/payment/error', response_class=HTMLResponse)
-def payment_error_page(request: Request) -> HTMLResponse:
+async def payment_error_page(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request=request, name='payment_error.html')
 
 
 @app.get('/error', response_class=HTMLResponse)
-def error_page(request: Request) -> HTMLResponse:
+async def error_page(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request=request, name='error.html')

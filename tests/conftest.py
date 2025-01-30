@@ -3,9 +3,9 @@ from typing import Literal
 
 import boto3
 import pytest
+from botocore import client
 from httpx import ASGITransport, AsyncClient
 from moto import mock_aws
-from botocore import client
 from redis.asyncio import Redis as asyncRedis
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from testcontainers.postgres import PostgresContainer
