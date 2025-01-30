@@ -1,0 +1,65 @@
+services:
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: app
+    entrypoint: ./scripts/app_entrypoint.sh
+    ports:
+      - 8000:8000
+    networks:
+      - network
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql+asyncpg://user:password@postgres:5432/app_db}
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  celery:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: celery
+    entrypoint: ./scripts/celery_entrypoint.sh
+    networks:
+      - network
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - REDIS_URL= ${REDIS_URL:-redis://redis:6379/0}
+      - REDIS_BROKER_URL=${REDIS_BROKER_URL:-redis://redis:6379/1}
+    env_file:
+      - .env
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    networks:
+      - network
+    ports:
+      - 6379:6379
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    networks:
+      - network
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_DB: app_db
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
+networks:
+  network:
+    driver: bridge
