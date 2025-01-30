@@ -1,7 +1,7 @@
 from src.integrations.email.email_integration import email, send_email
 
 
-async def test_email_integration():
+async def test_email_integration() -> None:
     email.config.SUPPRESS_SEND = 1
 
     subject_expected = 'Test Subject'

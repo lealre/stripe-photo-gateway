@@ -5,6 +5,7 @@ import boto3
 import pytest
 from httpx import ASGITransport, AsyncClient
 from moto import mock_aws
+from botocore import client
 from redis.asyncio import Redis as asyncRedis
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from testcontainers.postgres import PostgresContainer
@@ -83,7 +84,7 @@ async def async_client(
 
 
 @pytest.fixture
-def s3_client():
+def s3_client() -> Generator[client.BaseClient, None, None]:
     with mock_aws():
         s3_client = boto3.client('s3')
         yield s3_client

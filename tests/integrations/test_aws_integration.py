@@ -6,7 +6,7 @@ from botocore import client
 from src.integrations.aws_integration import store_in_s3
 
 
-async def test_aws_s3_integration(s3_client: client.BaseClient):
+async def test_aws_s3_integration(s3_client: client.BaseClient) -> None:
     bucket_name = 'test-bucket-name'
     s3_client.create_bucket(Bucket=bucket_name)
 
