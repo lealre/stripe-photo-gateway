@@ -25,10 +25,49 @@ The project uses:
 
 ### How it works
 
+The project was designed to avoid storing client data in the database before the payment is confirmed. This way, on the first page, when the user submits the uploaded photos and their respective quantities, the app stores the photos as Base64-encoded data in Redis. It then sends a session identifier as a cookie in the response, which will be used as the Redis key.
+
+On the second page, the address is validated to ensure it corresponds to a single location and is exclusively in Portugal. Since the address is validated using the Google API, each search query sent for validation is cached to prevent multiple requests to the paid API with the same query.
+
+Once the address is validated, the order details are stored in the database, and a Stripe Checkout session is generated. If the payment is confirmed, two background tasks are triggered using Celery: storage of the images in AWS S3 and sending an email to the host (business owner) with the order details.
 
 ![](media/workflow.png)
 
+All the values stored in Redis are set to expire after 1 day.
+
 ### How to run this project
+
+This section shows how to run this project using Docker and locally.
+
+For both methods, start with the two steps below:
+
+1 - Clone the project:
+
+```shell
+git clone https://github.com/lealre/stripe-photo-gateway.git
+```
+
+2 - Access the repository:
+
+```shell
+cd stripe-photo-gateway
+```
+
+3 - Create the `.env` file
+
+```shell
+mv .env-example .env
+```
+
+The [`.env-example`](.env-example) file contains all the necessary environment variables. You need to set the Stripe API key and the price ID to be displayed, the AWS and Google API keys, and the email app password along with its configurations.
+
+#### Using Docker
+
+[How to install docker](https://docs.docker.com/get-started/get-docker/)
+
+#### Local setup
+
+This projects usses [uv](https://docs.astral.sh/uv/).
 
 ### Notes
 
