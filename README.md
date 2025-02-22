@@ -35,41 +35,39 @@ Once the address is validated, the order details are stored in the database, and
 
 All the values stored in Redis are set to expire after 1 day.
 
-### How to run this project
+## Running the Project with Docker
 
-This section shows how to run this project using Docker and locally.
+This section explains how to run this project using Docker, which will build both the PostgreSQL and Redis databases along with the app.
 
-For both methods, start with the two steps below:
+All the necessary environment variables are listed in the [`.env-example`](.env-example) file. You need to set the following:
 
-1 - Clone the project:
+- The Stripe API key and the price ID to be displayed
+- AWS credentials for writing to S3
+- The Google API key
+- The email app password along with its configuration
+
+[How to install docker](https://docs.docker.com/get-started/get-docker/)
+
+1. Clone the project:
 
 ```shell
 git clone https://github.com/lealre/stripe-photo-gateway.git
 ```
 
-2 - Access the repository:
+2. Navigate to the project directory:
 
 ```shell
 cd stripe-photo-gateway
 ```
 
-3 - Create the `.env` file
+3. Create the `.env` file and pass your personal settings:
 
 ```shell
-mv .env-example .env
+cp .env-example .env
 ```
 
-The [`.env-example`](.env-example) file contains all the necessary environment variables. You need to set the Stripe API key and the price ID to be displayed, the AWS and Google API keys, and the email app password along with its configurations.
+4. Build and run the Docker containers:
 
-#### Using Docker
-
-[How to install docker](https://docs.docker.com/get-started/get-docker/)
-
-#### Local setup
-
-This projects usses [uv](https://docs.astral.sh/uv/).
-
-### Notes
-
-- The project focused in the backend payment flow, and the edge cases where not tread, and can be done as futher steps
-- templates are in async routes just due to the test coverage
+```shell
+docker compose up
+```
