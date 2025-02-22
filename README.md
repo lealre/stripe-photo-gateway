@@ -23,7 +23,7 @@ The project uses:
 - [pytest](https://docs.pytest.org/en/stable/), [pytest-cov](https://pytest-cov.readthedocs.io/en/latest/config.html), [testscontainers-python](https://testcontainers-python.readthedocs.io/en/latest/), and [pytest-mock](https://pytest-mock.readthedocs.io/en/latest/) to perform tests
 - [Docker](https://www.docker.com/) to orchestrate all the services together
 
-### How it works
+## How it works
 
 The project was designed to avoid storing client data in the database before the payment is confirmed. This way, on the first page, when the user submits the uploaded photos and their respective quantities, the app stores the photos as Base64-encoded data in Redis. It then sends a session identifier as a cookie in the response, which will be used as the Redis key.
 
