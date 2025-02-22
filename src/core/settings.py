@@ -28,8 +28,6 @@ class Settings(BaseSettings):
     TEMPLATE_FOLDER: DirectoryPath = Path('src/integrations/email/templates')
 
     GOOGLE_API_KEY: str = ''
-    GOOGLE_CLIENT_ID: str = ''
-    GOOGLE_CLIENT_SECRET: str = ''
     GOOGLE_VALIDATION_API_URL: str = ''
 
     REDIS_URL: str = 'redis://localhost:6379/0'
